@@ -1,103 +1,144 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+import { useState } from "react"
+import BannerPreview from "@/components/Banner"
+import ContentTab from "@/components/Content"
+import StyleTab from "@/components/Style"
+import LayoutTab from "@/components/Layout"
+import EffectsTab from "@/components/Effects"
+import ExportTab from "@/components/Export"
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+const animationStyles = `
+@keyframes animate-fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
+
+@keyframes animate-slidein {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes animate-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.animate-fadein {
+  animation: animate-fadein 1s;
+}
+
+.animate-slidein {
+  animation: animate-slidein 1s;
+}
+
+.animate-pulse {
+  animation: animate-pulse 2s infinite;
+}
+`
+
+const defaultSettings = {
+  title: "Welcome to Our Wiki",
+  content: "Discover our collection of knowledge and contribute to our growing community.",
+  alignment: "left",
+  bgType: "color",
+  bgColor: "#3366cc",
+  gradientStart: "#3366cc",
+  gradientEnd: "#1a4ba3",
+  gradientDirection: "to right",
+  bgImage: "",
+  bgOpacity: 100,
+  textColor: "#ffffff",
+  showImage: false,
+  imageUrl: "",
+  imagePosition: "right",
+  imageStyle: "circle",
+  imageSize: 120,
+  showCta: false,
+  ctaText: "Learn More",
+  ctaUrl: "#",
+  buttonColor: "#ffffff",
+  buttonTextColor: "#3366cc",
+  buttonStyle: "solid",
+  width: "full",
+  padding: 40,
+  margin: 0,
+  borderRadius: 8,
+  titleSize: 32,
+  textSize: 18,
+  showBorder: false,
+  borderColor: "#ffffff",
+  borderWidth: 2,
+  borderStyle: "solid",
+  overlayOpacity: 0,
+  overlayColor: "#000000",
+  pattern: "none",
+  patternOpacity: 20,
+  shadow: "none",
+  animation: "none",
+  textAnimation: "none",
+  hoverEffect: false,
+  responsive: true,
+}
+
+export default function BannerCustomizer() {
+  const [settings, setSettings] = useState(defaultSettings)
+  const [activeTab, setActiveTab] = useState("content")
+
+  const updateSettings = (key, value) => {
+    setSettings((prev) => ({
+      ...prev,
+      [key]: value,
+    }))
+  }
+
+  return (
+    <div className="w-full max-w-7xl mx-auto p-4 space-y-8">
+      <style>{animationStyles}</style>
+      <BannerPreview settings={settings} />
+
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="border-b mb-6">
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: "content", label: "Content" },
+              { id: "style", label: "Style" },
+              { id: "layout", label: "Layout" },
+              { id: "effects", label: "Effects" },
+              { id: "export", label: "Export" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-4 py-2 -mb-px ${
+                  activeTab === tab.id
+                    ? "border-b-2 border-blue-500 font-medium text-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {activeTab === "content" && <ContentTab settings={settings} updateSettings={updateSettings} />}
+        {activeTab === "style" && <StyleTab settings={settings} updateSettings={updateSettings} />}
+        {activeTab === "layout" && <LayoutTab settings={settings} updateSettings={updateSettings} />}
+        {activeTab === "effects" && <EffectsTab settings={settings} updateSettings={updateSettings} />}
+        {activeTab === "export" && <ExportTab settings={settings} />}
+
+        <div className="mt-6">
+          <button
+            onClick={() => setSettings(defaultSettings)}
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
+          >
+            Reset to Default
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
