@@ -269,6 +269,219 @@ export default function StyleTab({ settings, updateSettings }) {
           </div>
         )}
       </div>
+      <div className="space-y-4 mt-8 pt-4 border-t border-gray-200">
+        <h3 className="font-medium">Additional Banner Images</h3>
+        <div className="flex items-center justify-between">
+          <label htmlFor="showAdditionalImages" className="text-sm font-medium">
+            Add Images to Banner
+          </label>
+          <input
+            id="showAdditionalImages"
+            type="checkbox"
+            checked={settings.showAdditionalImages}
+            onChange={(e) => updateSettings("showAdditionalImages", e.target.checked)}
+            className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          />
+        </div>
+
+        {settings.showAdditionalImages && (
+          <div className="space-y-4 pl-4 border-l-2 border-gray-200">
+            {settings.additionalImages.map((image, index) => (
+              <div key={index} className="p-4 bg-gray-50 rounded-lg space-y-4">
+                <div className="flex justify-between items-center">
+                  <h4 className="font-medium">Image {index + 1}</h4>
+                  <button
+                    onClick={() => {
+                      const newImages = [...settings.additionalImages]
+                      newImages.splice(index, 1)
+                      updateSettings("additionalImages", newImages)
+                    }}
+                    className="text-red-500 hover:text-red-700 text-sm"
+                  >
+                    Remove
+                  </button>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Image</label>
+                  <div className="mt-2 space-y-4">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0]
+                        if (file) {
+                          const reader = new FileReader()
+                          reader.onloadend = () => {
+                            const newImages = [...settings.additionalImages]
+                            newImages[index] = {
+                              ...newImages[index],
+                              url: reader.result,
+                            }
+                            updateSettings("additionalImages", newImages)
+                          }
+                          reader.readAsDataURL(file)
+                        }
+                      }}
+                      className="w-full p-2 border border-gray-300 rounded"
+                    />
+                    {image.url && (
+                      <div className="relative w-32 h-32 bg-gray-100 rounded-lg overflow-hidden">
+                        <img
+                          src={image.url || "/placeholder.svg"}
+                          alt={`Image ${index + 1}`}
+                          className="w-full h-full object-cover"
+                          style={{
+                            borderRadius: `${image.borderRadius}px`,
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Position X</label>
+                    <select
+                      value={image.positionX}
+                      onChange={(e) => {
+                        const newImages = [...settings.additionalImages]
+                        newImages[index] = {
+                          ...newImages[index],
+                          positionX: e.target.value,
+                        }
+                        updateSettings("additionalImages", newImages)
+                      }}
+                      className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="left">Left</option>
+                      <option value="center">Center</option>
+                      <option value="right">Right</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Position Y</label>
+                    <select
+                      value={image.positionY}
+                      onChange={(e) => {
+                        const newImages = [...settings.additionalImages]
+                        newImages[index] = {
+                          ...newImages[index],
+                          positionY: e.target.value,
+                        }
+                        updateSettings("additionalImages", newImages)
+                      }}
+                      className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="top">Top</option>
+                      <option value="middle">Middle</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Width ({image.width}px)</label>
+                  <input
+                    type="range"
+                    min="50"
+                    max="400"
+                    step="10"
+                    value={image.width}
+                    onChange={(e) => {
+                      const newImages = [...settings.additionalImages]
+                      newImages[index] = {
+                        ...newImages[index],
+                        width: Number.parseInt(e.target.value),
+                      }
+                      updateSettings("additionalImages", newImages)
+                    }}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Border Radius ({image.borderRadius}px)</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="50"
+                    step="1"
+                    value={image.borderRadius}
+                    onChange={(e) => {
+                      const newImages = [...settings.additionalImages]
+                      newImages[index] = {
+                        ...newImages[index],
+                        borderRadius: Number.parseInt(e.target.value),
+                      }
+                      updateSettings("additionalImages", newImages)
+                    }}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Z-Index (Layer Order)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={image.zIndex}
+                    onChange={(e) => {
+                      const newImages = [...settings.additionalImages]
+                      newImages[index] = {
+                        ...newImages[index],
+                        zIndex: Number.parseInt(e.target.value),
+                      }
+                      updateSettings("additionalImages", newImages)
+                    }}
+                    className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-medium">Add Shadow</label>
+                  <input
+                    type="checkbox"
+                    checked={image.shadow}
+                    onChange={(e) => {
+                      const newImages = [...settings.additionalImages]
+                      newImages[index] = {
+                        ...newImages[index],
+                        shadow: e.target.checked,
+                      }
+                      updateSettings("additionalImages", newImages)
+                    }}
+                    className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  />
+                </div>
+              </div>
+            ))}
+
+            <button
+              onClick={() => {
+                const newImages = [
+                  ...settings.additionalImages,
+                  {
+                    url: "",
+                    positionX: "right",
+                    positionY: "middle",
+                    width: 100,
+                    borderRadius: 0,
+                    zIndex: 2,
+                    shadow: false,
+                  },
+                ]
+                updateSettings("additionalImages", newImages)
+              }}
+              className="mt-4 w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            >
+              Add Another Image
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

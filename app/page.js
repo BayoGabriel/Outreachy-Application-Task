@@ -8,6 +8,7 @@ import LayoutTab from "@/components/Layout"
 import EffectsTab from "@/components/Effects"
 import ExportTab from "@/components/Export"
 
+// Define CSS for animations
 const animationStyles = `
 @keyframes animate-fadein {
   from { opacity: 0; }
@@ -80,6 +81,18 @@ const defaultSettings = {
   textAnimation: "none",
   hoverEffect: false,
   responsive: true,
+  showAdditionalImages: false,
+  additionalImages: [
+    {
+      url: "",
+      positionX: "right",
+      positionY: "middle",
+      width: 100,
+      borderRadius: 0,
+      zIndex: 2,
+      shadow: false,
+    },
+  ],
 }
 
 export default function BannerCustomizer() {

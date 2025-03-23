@@ -59,6 +59,37 @@ export default function ExportTab({ settings }) {
         ">${settings.ctaText}</a>`
           : ""
       }
+      ${
+        settings.showAdditionalImages
+          ? settings.additionalImages
+              .map((image, index) => {
+                if (!image.url) return ""
+                return `
+        <img 
+          src="${image.url}" 
+          style="
+            position: absolute;
+            ${image.positionX === "left" ? "left: 20px;" : image.positionX === "right" ? "right: 20px;" : "left: 50%; transform: translateX(-50%);"}
+            ${image.positionY === "top" ? "top: 20px;" : image.positionY === "bottom" ? "bottom: 20px;" : "top: 50%; transform: translateY(-50%);"}
+            ${
+              image.positionX === "center" && image.positionY === "middle"
+                ? "transform: translate(-50%, -50%);"
+                : image.positionX === "center"
+                  ? "transform: translateX(-50%);"
+                  : image.positionY === "middle"
+                    ? "transform: translateY(-50%);"
+                    : ""
+            }
+            width: ${image.width}px;
+            border-radius: ${image.borderRadius}px;
+            z-index: ${image.zIndex};
+            ${image.shadow ? "box-shadow: 0 4px 8px rgba(0,0,0,0.2);" : ""}
+          "
+        />`
+              })
+              .join("")
+          : ""
+      }
     </div>
     
     ${
